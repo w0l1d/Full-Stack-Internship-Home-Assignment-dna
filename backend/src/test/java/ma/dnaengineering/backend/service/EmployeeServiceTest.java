@@ -23,10 +23,6 @@ class EmployeeServiceTest {
     @Autowired
     private EmployeeService employeeService;
 
-//    @BeforeEach
-//    void setup() {
-//        MockitoAnnotations.openMocks(this);
-//    }
 
     @Test
     void testProcessCsvFile() throws IOException {
