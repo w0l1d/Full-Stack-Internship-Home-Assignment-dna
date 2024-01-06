@@ -2,18 +2,18 @@ import {useState} from 'react';
 import UploadForm from '../components/UploadForm';
 import EmployeeTable from '../components/EmployeeTable';
 import JobSummaryTable from '../components/JobSummaryTable';
-import employeeService from '../services/EmployeeService';
 
 const Home = () => {
     const [uploadedData, setUploadedData] = useState(null);
     const [jobSummary, setJobSummary] = useState(null);
 
     const handleUpload = async (data) => {
-        setUploadedData(data);
 
         // Assuming you have a function to get job summary from the backend
         try {
-            const summary = await employeeService.getSummary(data);
+            setUploadedData(data.employees);
+
+            const summary = data.summary;
             setJobSummary(summary);
         } catch (error) {
             console.log(error);
