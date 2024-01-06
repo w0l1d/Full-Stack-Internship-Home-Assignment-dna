@@ -34,12 +34,14 @@ public class EmployeeService {
     }
 
     private Employee mapToEmployee(String[] data) {
+        if (data.length != 4)
+            throw new IllegalArgumentException("Invalid data: expected 4 columns but got " + data.length + " columns");
         return Employee
                 .builder()
-                .id(Long.parseLong(data[0]))
-                .name(data[1])
-                .jobTitle(data[2])
-                .salary(Double.parseDouble(data[3]))
+                .id(Long.parseLong(data[0].trim()))
+                .name(data[1].trim())
+                .jobTitle(data[2].trim())
+                .salary(Double.parseDouble(data[3].trim()))
                 .build();
     }
 
