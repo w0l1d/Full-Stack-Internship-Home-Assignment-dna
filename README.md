@@ -9,6 +9,7 @@ Build a CSV Parser.
 - [How to run the application](#how-to-run-the-application)
 - [Description](#description)
   - [Interfaces](#interfaces)
+- [How it looks like](#how-it-looks-like)
 
 ## Prerequisites
 - Java 17
