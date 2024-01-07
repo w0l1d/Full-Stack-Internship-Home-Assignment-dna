@@ -4,4 +4,4 @@ spring:
       file: ./backend/compose.yaml
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
