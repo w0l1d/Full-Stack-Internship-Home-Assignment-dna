@@ -3,6 +3,12 @@ Build a CSV Parser.
 
 ## Table of content
 - [Prerequisites](#prerequisites)
+- [Before We begin](#before-we-begin)
+- [How it works](#how-it-works)
+  - [Important Note](#important-note)
+- [How to run the application](#how-to-run-the-application)
+- [Description](#description)
+  - [Interfaces](#interfaces)
 
 ## Prerequisites
 - Java 17
@@ -69,3 +75,11 @@ Respect the following design flow:
 
 **Table 2**: Jobs summary, displays for each job title, the average salary for employees.
 
+### How it looks like
+
+* upload a CSV file
+  ![img.png](static/upload_csv_interface.png)
+* Table 1: Employee information
+  ![img.png](static/employee_info_table.png)
+* Table 2: Jobs summary
+  ![img.png](static/job_summary_table.png)
