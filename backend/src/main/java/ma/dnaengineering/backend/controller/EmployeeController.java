@@ -43,8 +43,4 @@ public class EmployeeController {
                 .build());
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<List<Employee>> findAll() {
-        return ResponseEntity.ok(employeeService.findAll());
-    }
 }

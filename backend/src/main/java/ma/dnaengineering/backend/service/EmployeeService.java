@@ -68,7 +68,4 @@ public class EmployeeService {
                         entry -> roundToTwoDecimals(entry.getValue())));
     }
 
-    public List<Employee> findAll() {
-        return employeeRepository.findAll();
-    }
 }
