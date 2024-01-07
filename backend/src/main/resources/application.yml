@@ -1,7 +1,7 @@
 spring:
-  docker:
-    compose:
-      file: ./backend/compose.yaml
+  #  docker:
+  #    compose:
+  #      file: ./backend/compose.yaml
   jpa:
     hibernate:
       ddl-auto: update
