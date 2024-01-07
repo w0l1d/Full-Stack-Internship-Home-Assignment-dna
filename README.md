@@ -3,39 +3,57 @@ Build a CSV Parser.
 
 ## Table of content
 - [Prerequisites](#prerequisites)
-- [Before We begin](#before-we-begin)
-- [Assignment](#assignment)
-- [What we expect](#what-we-expect)
-- [Bonus points](#bonus-points)
 
 ## Prerequisites
 - Java 17
 - Node Js v20.10.0
+- Docker
 
-## Before we begin
-- In this assignment, you will be asked to write, and test your code.
-- Make sure you respect clean code guidelines.
-- Read the assignment carefully.
+## Before We begin
+
+- Clone the repository
+- run maven build `mvn -f ./backend/pom.xml clean install`
+- run npm install `npm install --prefix ./frontend`
+
+## how it works
+
+- The application is divided into two parts, the backend and the frontend.
+- The backend is a spring boot application that exposes a REST API to upload and process CSV files.
+- The frontend is a Next.js application that consumes the backend's REST API and displays the results.
+- The backend is configured to run on port 8080.
+- The frontend is configured to run on port 3000.
+- The backend is configured to auto run a postgresql docker container.
+  - the docker compose will run automatically when you run the backend application.
+  - the docker compose will create a database with specified name and credentials in `./backend/compose.yaml`.
+  - the datasource is configured to connect to the database container.
+
+### Important Note
+
+* if you use **Intellij IDEA**, uncomment the following lines in `./backend/src/main/resources/application.yml`.
+
+```yaml
+spring:
+  docker:
+    compose:
+      file: ./backend/compose.yaml
+```
+
+Intellij IDEA set the working directory `./` to the project root directory instead of `./backend`, so the compose file
+will be not be found.
+**it might happen with other IDEs.**
+
+## How to run the application
+
+1. Start the backend server. with `mvn -f ./backend/pom.xml spring-boot:run`.
+
+2. Start the frontend server. with `npm run --prefix ./frontend dev`.
+3. Open your web browser and navigate to the frontend server's address.
+4. Use the application's interface to upload and process CSV files.
+5. The results will be displayed in the tables.
 
 ## Description
 You are invited to create a CSV parser using Java/Spring Boot, and build UI to display results using Next.js/React.
 
-## Assignment
-
-### Backend (CSV Parser)
-
-#### Tasks
-
-- Write a service in Java that will read and process the attached CSV(comma separated values) file at `data/employees.csv`.
-
-- This service should read, extract and process data in a suitable data structure.
-
-- Process this data to return the list of employees and a summary indicating the average salary for each job title.
-
-### Frontend
-
-#### Tasks
-Implement a simple user interface that will allow the user to upload the file and display the results of your processing.
 
 #### Interfaces
 
@@ -51,12 +69,3 @@ Respect the following design flow:
 
 **Table 2**: Jobs summary, displays for each job title, the average salary for employees.
 
-## What we expect
-- Write a concise, easy to understand code.
-- Use good practices.
-- Write unit tests for your java code.
-- Append to this README your approach and provide instructions to run your project.
-
-## Bonus points
-- Implement your own CSV file parser instead of using a library.
-- Use design patterns.
