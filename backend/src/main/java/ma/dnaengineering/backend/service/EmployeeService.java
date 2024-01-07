@@ -1,6 +1,8 @@
 package ma.dnaengineering.backend.service;
 
+import lombok.RequiredArgsConstructor;
 import ma.dnaengineering.backend.model.Employee;
+import ma.dnaengineering.backend.repository.EmployeeRepository;
 import ma.dnaengineering.backend.util.CsvParser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +16,10 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
+
+    private final EmployeeRepository employeeRepository;
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
@@ -31,6 +36,10 @@ public class EmployeeService {
         return csvData.stream()
                 .map(this::mapToEmployee)
                 .collect(toList());
+    }
+
+    public List<Employee> saveAll(List<Employee> employees) {
+        return employeeRepository.saveAll(employees);
     }
 
     private Employee mapToEmployee(String[] data) {
@@ -50,12 +59,16 @@ public class EmployeeService {
         return employees
                 .stream()
                 .collect(groupingBy(
-                        Employee::jobTitle,
-                        averagingDouble(Employee::salary)))
+                        Employee::getJobTitle,
+                        averagingDouble(Employee::getSalary)))
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> roundToTwoDecimals(entry.getValue())));
+    }
+
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
     }
 }
