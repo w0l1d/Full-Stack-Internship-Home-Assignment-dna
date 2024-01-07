@@ -1,6 +1,7 @@
 package ma.dnaengineering.backend.controller;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.dnaengineering.backend.dto.EmployeeCsvDto;
@@ -25,16 +26,25 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping("/upload")
+    @Transactional
     public ResponseEntity<EmployeeCsvDto> uploadCsvFile(@RequestParam("file") MultipartFile file) throws
             IOException {
         log.info("Uploading file: {}", file.getOriginalFilename());
         List<Employee> employees = employeeService.processCsvFile(file);
-        Map<String, Double> summary = employeeService.calculateAverageSalaryByJobTitle(employees);
+        List<Employee> savedEmployees = employeeService.saveAll(employees);
+        log.info("Saved {} employees", savedEmployees.size());
+        Map<String, Double> summary = employeeService
+                .calculateAverageSalaryByJobTitle(savedEmployees);
 
         return ResponseEntity.ok(EmployeeCsvDto
                 .builder()
-                .employees(employees)
+                .employees(savedEmployees)
                 .summary(summary)
                 .build());
+    }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<List<Employee>> findAll() {
+        return ResponseEntity.ok(employeeService.findAll());
     }
 }

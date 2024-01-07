@@ -1,28 +1,34 @@
 package ma.dnaengineering.backend.service;
 
 import ma.dnaengineering.backend.model.Employee;
+import ma.dnaengineering.backend.repository.EmployeeRepository;
 import ma.dnaengineering.backend.util.CsvParser;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(classes = {EmployeeService.class})
 class EmployeeServiceTest {
-
 
     @Autowired
     private EmployeeService employeeService;
-
+    @MockBean
+    private EmployeeRepository employeeRepository;
+    @MockBean
+    private DataSource dataSource;
 
     @Test
     void testProcessCsvFile() throws IOException {
@@ -34,16 +40,17 @@ class EmployeeServiceTest {
 
         try (MockedStatic<CsvParser> utilities = Mockito.mockStatic(CsvParser.class)) {
             utilities.when(() -> CsvParser.parseCsv(any())).thenReturn(csvData);
+            when(employeeRepository.saveAll(any())).thenReturn(List.of(Employee.builder().id(1L).name("John").jobTitle("Doe").salary(5000.0).build()));
 
             List<Employee> employees = employeeService.processCsvFile(file);
 
             assertEquals(1, employees.size());
             assertAll(
                     () -> assertEquals(1, employees.size()),
-                    () -> assertEquals(1L, employees.get(0).id()),
-                    () -> assertEquals("John", employees.get(0).name()),
-                    () -> assertEquals("Doe", employees.get(0).jobTitle()),
-                    () -> assertEquals(5000.0, employees.get(0).salary())
+                    () -> assertEquals(1L, employees.get(0).getId()),
+                    () -> assertEquals("John", employees.get(0).getName()),
+                    () -> assertEquals("Doe", employees.get(0).getJobTitle()),
+                    () -> assertEquals(5000.0, employees.get(0).getSalary())
             );
         }
 
@@ -67,6 +74,7 @@ class EmployeeServiceTest {
 
     @Test
     void testProcessCsvFile_NullFile() {
+        when(employeeRepository.saveAll(any())).thenReturn(List.of());
         assertThrows(NullPointerException.class, () -> employeeService.processCsvFile(null));
     }
 
@@ -74,6 +82,7 @@ class EmployeeServiceTest {
         //empty.csv is an empty file with no content and no header
     void testProcessCsvFile_EmptyFile() {
         MockMultipartFile file = new MockMultipartFile("file", "empty.csv", "text/csv", "".getBytes());
+        when(employeeRepository.saveAll(any())).thenReturn(List.of());
         assertThrows(IndexOutOfBoundsException.class, () -> employeeService.processCsvFile(file));
     }
 
@@ -87,6 +96,7 @@ class EmployeeServiceTest {
                         id,name,jobTitle,salary
                         1 John Doe 5000.0
                         """.getBytes());
+
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> employeeService.processCsvFile(file));

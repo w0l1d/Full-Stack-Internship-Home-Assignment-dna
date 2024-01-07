@@ -1,18 +1,35 @@
 package ma.dnaengineering.backend.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.NonNull;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
-public record Employee(
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Employee {
+        @Id
+        @GeneratedValue(strategy = GenerationType.UUID)
+        private UUID AppId;
+        @CreatedDate
+        private LocalDateTime createdAt;
+        @NonNull
         @Min(0)
-        Long id,
+        private Long id;
         @NotBlank
-        String name,
+        private String name;
         @NotBlank
-        String jobTitle,
+        private String jobTitle;
         @NonNull @Min(0)
-        Double salary) {
+        private Double salary;
 }
